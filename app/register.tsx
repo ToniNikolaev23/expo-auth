@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -14,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = z.object({
   name: z.string().optional(),
@@ -29,6 +31,7 @@ type FormData = z.infer<typeof schema>;
 const Page = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { onRegister } = useAuth();
 
   const {
     control,
@@ -38,20 +41,25 @@ const Page = () => {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "Tester",
-      email: "a@a.com",
+      name: "Test",
+      email: "toni@test.com",
       password: "123456",
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const result = await onRegister!(data.email, data.password, data.name);
+
+    if (result && result.error) {
+      Alert.alert("Error", result.error);
+    } else {
+      router.back();
+    }
+    setLoading(false);
   };
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
