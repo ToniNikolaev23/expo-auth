@@ -1,6 +1,7 @@
 import { COLORS } from "@/utils/colors";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -16,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
 import { useRouter, Link } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -30,6 +32,7 @@ type FormData = z.infer<typeof schema>;
 export default function Index() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { onLogin } = useAuth();
 
   const {
     control,
@@ -39,18 +42,21 @@ export default function Index() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "a@a.com",
+      email: "toni@test.com",
       password: "123456",
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    const result = await onLogin!(data.email, data.password);
+    if (result && result.error) {
+      Alert.alert("Error", result.error);
+    } else {
+      console.log(result);
+    }
+    setLoading(false);
   };
   return (
     <View style={styles.container}>
