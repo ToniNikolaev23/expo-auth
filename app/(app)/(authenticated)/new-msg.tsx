@@ -31,6 +31,7 @@ const Page = () => {
           title: "Failed to send message",
           message: "Please try again",
           duration: 3,
+          preset: "error",
         });
       } else {
         Burnt.toast({
@@ -46,6 +47,7 @@ const Page = () => {
         title: "Failed to send message",
         message: error.message,
         duration: 3,
+        preset: "error",
       });
     },
   });

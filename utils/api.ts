@@ -75,7 +75,7 @@ export const fetchMessages = async (): Promise<ApiResponse<Message[]>> => {
     const response = await axios.get(`${API_URL}/messages`);
     return { data: response.data };
   } catch (error) {
-    return { error: "Failed to fetch messages. Please try again." };
+    throw new Error("Failed to fetch messages. Please try again.");
   }
 };
 
