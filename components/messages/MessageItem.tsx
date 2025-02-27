@@ -14,7 +14,7 @@ export const MessageItem = ({ message }: MessageItemProps) => {
 
   return (
     <Link
-      href={`/`}
+      href={`/(app)/(authenticated)/(tabs)/messages/${message.id}`}
       asChild
       style={[
         styles.container,

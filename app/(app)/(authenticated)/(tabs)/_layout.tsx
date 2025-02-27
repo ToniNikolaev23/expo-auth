@@ -22,6 +22,7 @@ const Layout = () => {
         name="messages"
         options={{
           tabBarLabel: "Messages",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="message" size={size} color={color} />
           ),
